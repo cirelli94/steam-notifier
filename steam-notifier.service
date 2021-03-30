@@ -1,0 +1,8 @@
+[Unit]
+Description=Get notifications for your games!
+
+[Service]
+User=%I
+Restart=always
+RestartSec=1800s
+ExecStart=/home/cirelli/bin/steam-notifier
