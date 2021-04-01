@@ -30,9 +30,9 @@ for GAME in "$CONFIG"/* ; do
 	fi
 
 	if (( (( LAST - PREVIOUS )) > 0 )); then
-		WHEN=$( echo "$LAST" | xargs -I % sh -c 'date -d @%')
+		WHEN=$( echo "$LAST" | xargs -I _ sh -c 'date +"%d %B %Y, %H:%I" -d @_')
 
-		notify-send "$GAME_NAME got an update on $WHEN!" --urgency=critical
+		notify-send "$GAME_NAME got an update!" "On $WHEN" --urgency=critical --icon=steam
 		echo "$GAME_NAME got an update on $WHEN!"
 
 		echo "$LAST" > "$GAME"
