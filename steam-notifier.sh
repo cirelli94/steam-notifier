@@ -1,12 +1,26 @@
 #!/bin/bash
 
-# pip install steamctl
+# sudo pip install steamctl
 
-if ! command -v steamctl &> /dev/null
-then
+if ! command -v steamctl &> /dev/null ; then
+    echo "missing dependency"
     echo "steamctl could not be found"
     echo "install with 'pip install steamctl'"
     echo "more here: https://github.com/ValvePython/steamctl"
+    exit 1
+fi
+
+if ! command -v jq &> /dev/null ; then
+    echo "missing dependency"
+    echo "jq could not be found"
+    echo "more here: https://stedolan.github.io/jq/"
+    exit 1
+fi
+
+if ! command -v notify-send &> /dev/null ; then
+    echo "missing dependency"
+    echo "notify-send could not be found"
+    echo "notify-send is provided by libnotify"
     exit 1
 fi
 
@@ -16,6 +30,7 @@ for GAME in "$CONFIG"/* ; do
 	APPID=$(basename "$GAME" )
 
 	steamctl -l quiet apps product_info "$APPID" > "$GAME.json" || {
+		notify-send "Failed steamctl with GAME: [$GAME] and APPID: [$APPID]" --urgency=critical
 		echo "Failed steamctl with GAME: [$GAME] and APPID: [$APPID]" 
 		rm "$GAME.json"
 		continue 
