@@ -50,9 +50,17 @@ for GAME in "$CONFIG"/* ; do
 		notify-send "$GAME_NAME got an update!" "On $WHEN" --urgency=critical --icon=steam
 		echo "$GAME_NAME got an update on $WHEN!"
 
+		if [ -v DISCORD_WEBHOOK ]; then
+			echo "Send discord notification"
+			curl "$DISCORD_WEBHOOK" \
+				--request POST -H 'Content-Type: application/json' \
+				--data-raw "{ \"username\": \"Steam Notifier\", \"content\": \"$GAME_NAME got an update! On $WHEN\" }";
+		fi
+
+
 		echo "$LAST" > "$GAME"
 	else
-		echo "nothing new for $GAME_NAME :("
+		echo "Nothing new for $GAME_NAME :("
 	fi
 
 	rm "$GAME.json"
