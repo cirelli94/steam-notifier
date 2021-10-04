@@ -33,6 +33,14 @@ for GAME in "$CONFIG"/* ; do
 		notify-send "Failed steamctl with GAME: [$GAME] and APPID: [$APPID]" --urgency=critical
 		echo "Failed steamctl with GAME: [$GAME] and APPID: [$APPID]" 
 		rm "$GAME.json"
+
+                if [ -v DISCORD_ERROR_WEBHOOK ]; then
+                        echo "Send discord error notification"
+                        curl "$DISCORD_ERROR_WEBHOOK" \
+                                --request POST -H 'Content-Type: application/json' \
+                                --data-raw "{ \"username\": \"Steam Notifier\", \"content\": \"Error while trying to retrieve informations for game with AppID: $APPID.\" }";
+                fi
+
 		continue 
 	}
 
